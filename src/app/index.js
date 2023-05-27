@@ -10,6 +10,8 @@ import requestError from './middlewares/requestError.js';
 
 env.config();
 
+const PORT_ = process.env.PORT ?? 3001;
+
 const app = express();
 
 app.use(cors());
@@ -20,4 +22,4 @@ app.use(routes);
 
 app.use(requestError);
 
-app.listen(process.env.PORT ?? 3001, () => console.log(`Server Started At Port ${process.env.PORT}`));
+app.listen(PORT_ , () => console.log(`Server Started At Port ${PORT_ }`));
