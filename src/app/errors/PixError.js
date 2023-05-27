@@ -3,10 +3,11 @@
 export class PixError extends Error {
 
     statusCode
+    errors
 
-    constructor(error,statusCode){
+    constructor(errors,statusCode){
         super()
-        this.message = error,
+        this.errors = errors,
         this.statusCode = statusCode
     }
 

@@ -1,5 +1,8 @@
 import { body } from "express-validator";
-import toNumber from './custom/toNumber';
+
+import resultValidation from '../middlewares/resultValidation.js';
+
+import toNumber from './custom/toNumber.js';
 
 export default {
 
@@ -13,19 +16,19 @@ export default {
         
         body('message')
         .optional()
-        .trim()
-        .toString(),
+        .trim(),
 
         body('key')
         .notEmpty()
-        .trim()
-        .toString(),
+        .withMessage('É necessário enviar a chave PIX')
+        .trim(),
 
-        body('pix_username')
+        body('pixUsername')
         .notEmpty()
         .trim()
-        .withMessage('É necessário informar quem está realizando a transação')
-        .toString()
+        .withMessage('É necessário informar quem está realizando a transação'),
+
+        resultValidation
 
     ]
 

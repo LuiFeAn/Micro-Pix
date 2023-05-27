@@ -1,13 +1,13 @@
 import { Router } from "express";
 
-import pixController from '../controllers/PixController';
-
-import pixValidation from '../validations/PixValidation';
-
 export const pixRoutes = Router();
+
+import pixController from "../controllers/pixController.js";
+import pixValidation from "../validations/pixValidation.js";
+
 
 pixRoutes.post(
     '/',
     pixValidation.create,
     pixController.create
-);
+)

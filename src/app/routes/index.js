@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import { pixRoutes } from './PixRoutes';
-
 export const routes = Router();
+
+import { pixRoutes } from './pixRoutes.js';
 
 routes.use('/qrcode',pixRoutes);

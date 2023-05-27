@@ -1,13 +1,12 @@
-import pixService from "../services/pixService";
-import pixMapper from "../mappers/PixMapper";
+import pixService from "../services/pixService.js";
+
+import pixMapper from "../mappers/PixMapper.js";
 
 export default {
 
     async create(req,res){
 
         const body = pixMapper.toPersistance(req.body);
-
-        console.log(body);
 
         const { value, message, pix_username, key } = body;
 
