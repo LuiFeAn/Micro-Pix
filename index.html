@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PIX</title>
+
+    <style>
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        }
+
+        .container{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap:10px;
+
+        }
+
+        .container label{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap:10px;
+        }
+
+        .container input {
+            width: 300px;
+            height: 65px;
+            border-radius: 10px;
+            border:none;
+            outline: none;
+        }
+
+        .container button{
+
+            width: 200px;
+            height: 35px;
+            cursor: pointer;
+            border-radius: 10px;
+            border:none;
+            background-color: black;
+            color:white;
+            font-weight: bold;
+
+        }
+
+        .container #pix-qrcode{
+
+            width: 20%;
+            height: 20%;
+
+        }
+
+        #pix-print-value{
+               display: none;
+            }
+
+        @media print{
+
+            .container{
+                flex-direction: column;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .container label{
+                display: none;
+            }
+
+            .container #pix-qrcode{
+
+                width: 100%;
+                height: 100%;
+
+            }
+
+            #pix-print-value{
+                display: block;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+<body>
+    
+    <div class="container">
+
+        <label>
+    
+            <input  placeholder="Valor do PIX" id="pix-value" type="number">
+
+            <input value="" min="0" id="pix-msg" placeholder="Mensagem" type="text">
+    
+            <button onclick="generate()">Gerar QrCode</button>
+
+            <button  onclick="printQr()">Imprimir</button>
+
+            <p id="pix-text-value"></p>
+    
+        </label>
+
+        <img id="pix-qrcode"/>
+
+        <h1 id="pix-print-value"></h1>
+
+    </div>
+
+    <script>
+
+        const pixValue = document.querySelector('#pix-value');
+
+        const pixMessage = document.querySelector('#pix-msg');
+
+        const pixQrCode = document.querySelector("#pix-qrcode");
+
+        const pixPrintValue = document.querySelector("#pix-print-value");
+
+        const pixTextValue = document.querySelector("#pix-text-value");
+
+        let hasGenereted = false;
+
+        const endpint = 'http://localhost:3000/qrcode';
+
+        pixValue.addEventListener('keyup',convertToBrl);
+
+        function convertToBrl(){
+            
+            pixTextValue.innerHTML = `PIX: ${Number(pixValue.value).toLocaleString('pt-br',{
+                style: 'currency', currency: 'BRL'
+            })}`
+        }
+
+        async function makeRequest(url,method, body = {}){
+
+            const response = await fetch(url,{
+                method:method,
+                headers: {
+                     'Content-Type': 'application/json'
+                },
+                body:JSON.stringify(body)
+            });
+
+            return await response.json();
+
+        }
+
+        async function generate(){
+
+            hasGenereted = false;
+
+            if( pixValue.value <= 0){
+
+                return alert('Valor inválido de PIX')
+
+            }
+
+            const data = await makeRequest(endpint,'POST',{
+                value: pixValue.value,
+                message: pixMessage.value
+            })
+
+            hasGenereted = true;
+
+            pixQrCode.setAttribute('src',data);
+
+            pixMessage.value = '';
+
+            pixValue.value = '';
+
+        }
+
+        function printQr(){
+
+            if( hasGenereted ){
+
+                pixPrintValue.innerHTML = pixTextValue.innerHTML;
+
+                pixTextValue.innerHTML = '';
+               
+                window.print();
+
+                const clear = setInterval( () =>  {
+                    pixQrCode.setAttribute('src','./src/images/white-background.webp')
+                     clearInterval(clear);
+                }, 1000);
+
+                return
+            }
+
+            alert('Necessário gerar o QrCode primeiro');
+
+        }
+
+    </script>
+
+</body>
+</html>
