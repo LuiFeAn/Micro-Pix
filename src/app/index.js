@@ -20,4 +20,4 @@ app.use(routes);
 
 app.use(requestError);
 
-app.listen(process.env.PORT, () => console.log(`Server Started At Port ${process.env.PORT}`));
+app.listen(process.env.PORT ?? 3001, () => console.log(`Server Started At Port ${process.env.PORT}`));
